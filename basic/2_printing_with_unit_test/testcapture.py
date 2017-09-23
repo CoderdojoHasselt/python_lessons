@@ -1,18 +1,21 @@
-import os
-import unittest
-import subprocess
-import builtins
-import io
+from io import StringIO
 import sys
 
+import builtins
+
+
 def fake_input(prompt):
-    # print(prompt)
+    print(prompt)
     return "jonny"
+
+
+
+
 
 class Capturing(list):
     def __enter__(self):
         self._stdout = sys.stdout
-        sys.stdout = self._stringio = io.StringIO()
+        sys.stdout = self._stringio = StringIO()
         self._input = builtins.input
         builtins.input = fake_input
         return self
@@ -22,14 +25,12 @@ class Capturing(list):
         sys.stdout = self._stdout
         builtins.input = self._input
 
-class AdditionTests(unittest.TestCase):
+def f():
+    print("jonny")
 
-    def test_main(self):
-        with Capturing() as output:
-            import main
-        print(output)
-        self.assertEqual(output, ['Hello jonny!'])
+with Capturing() as output:
+    f()
+    import main
 
-
-if __name__ == '__main__':
-    unittest.main()
+print("output")
+print(output)
